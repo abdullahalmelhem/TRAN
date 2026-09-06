@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ساحة الطيران - تقرير خدمة الطائرة</title>
+  <title>ترانزيت_تقرير خدمة الطائرات</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -273,7 +273,7 @@
             <img src="logo.png" onerror="this.style.display='none'" class="w-12 h-12 object-contain">
             <div>
               <div class="text-[11px] text-[color:var(--gold)] font-extrabold tracking-wide">الجمهورية العربية السورية</div>
-              <div class="text-base sm:text-lg font-extrabold">ساحة الطيران - تقرير الخدمة الجديد</div>
+              <div class="text-base sm:text-lg font-extrabold">ترانزيت_تقرير خدمة الطائرات</div>
             </div>
           </div>
           <div class="flex flex-col sm:flex-row gap-2">
@@ -304,7 +304,7 @@
                 <input id="flight_day" class="inp" type="text" readonly placeholder="يتم التحديد تلقائياً">
               </div>
 
-              <div class="sm:col-span-2">
+              <div>
                 <label class="label">نوع الطائرة</label>
                 <input id="aircraft_type" type="hidden" value="" class="required-field">
                 <div id="aircraftSelect" class="select-wrap">
@@ -319,10 +319,29 @@
                   </div>
                 </div>
               </div>
+
+              <div>
+                <label class="label">قدوم/مغادرة</label>
+                <input id="flight_direction" type="hidden" value="" class="required-field">
+                <div id="directionSelect" class="select-wrap">
+                  <button id="direction_btn" type="button" class="inp select-btn" aria-haspopup="listbox" aria-expanded="false">
+                    <span id="direction_btn_text">اختر...</span>
+                    <span class="left-icons"><span class="chev"></span></span>
+                  </button>
+                  <div id="direction_menu" class="select-menu" role="listbox">
+                    <div id="direction_list" class="select-list"></div>
+                  </div>
+                </div>
+              </div>
               
-              <div class="sm:col-span-2">
+              <div>
                 <label class="label">وجهة الرحلة</label>
                 <input id="destination" class="inp required-field" type="text" placeholder="الوجهة">
+              </div>
+
+              <div>
+                <label class="label">رقم البوابة</label>
+                <input id="gate_number" class="inp required-field" type="text" placeholder="رقم البوابة">
               </div>
 
               <div>
@@ -334,11 +353,7 @@
                 <input id="end_time" class="inp required-field" type="time">
               </div>
 
-              <div>
-                <label class="label">رقم البوابة</label>
-                <input id="gate_number" class="inp required-field" type="text" placeholder="رقم البوابة">
-              </div>
-              <div>
+              <div class="sm:col-span-2">
                 <label class="label">عدد الركاب</label>
                 <input id="pax_count" class="inp required-field" type="number" min="0" placeholder="0">
               </div>
@@ -462,14 +477,58 @@
       setAircraftType("");
     }
 
+    // ===== Direction Select (قدوم/مغادرة) =====
+    const DIRECTION_OPTIONS = ["قدوم", "مغادرة"];
+    
+    function setDirectionType(val){
+      const hidden = document.getElementById('flight_direction');
+      const btnText = document.getElementById('direction_btn_text');
+      hidden.value = (val || "").trim();
+      btnText.textContent = hidden.value ? hidden.value : "اختر...";
+      renderDirectionList();
+    }
+
+    function renderDirectionList(){
+      const list = document.getElementById('direction_list');
+      const selected = (document.getElementById('flight_direction').value || "").trim();
+      list.innerHTML = "";
+      DIRECTION_OPTIONS.forEach(name => {
+        const b = document.createElement('button');
+        b.type = "button";
+        b.className = "select-item" + (name === selected ? " selected" : "");
+        b.innerHTML = `<span>${escapeHtml(name)}</span><span class="tick">✓</span>`;
+        b.onclick = () => { setDirectionType(name); closeDirectionMenu(); };
+        list.appendChild(b);
+      });
+    }
+
+    function openDirectionMenu(){
+      document.getElementById('directionSelect').classList.add('open');
+      renderDirectionList();
+    }
+    function closeDirectionMenu(){ document.getElementById('directionSelect').classList.remove('open'); }
+    function toggleDirectionMenu(){
+      const wrap = document.getElementById('directionSelect');
+      if(wrap.classList.contains('open')) closeDirectionMenu(); else openDirectionMenu();
+    }
+
+    function initDirectionSelect(){
+      const btn = document.getElementById('direction_btn');
+      btn.addEventListener('click', toggleDirectionMenu);
+      document.addEventListener('click', (e) => {
+        if(!document.getElementById('directionSelect').contains(e.target)) closeDirectionMenu();
+      });
+      setDirectionType("");
+    }
+
     // ===== Validation & Export =====
     const LABELS = {
-      flight_date: "تاريخ الرحلة", aircraft_type: "نوع الطائرة", destination: "وجهة الرحلة",
-      start_time: "توقيت بدء الرحلة", end_time: "توقيت انتهاء الرحلة", gate_number: "رقم البوابة",
-      pax_count: "عدد الركاب", airport_officer: "اسم ضابط المطار", supervisor: "اسم المشرف",
-      ground_hostess: "المضيفة الأرضية", baggage_inspector: "مفتش الحقائب", xr_inspector: "مفتش جهاز الـ XR",
-      male_body_inspector: "مفتش جسدي رجال", female_body_inspector: "مفتش جسدي نساء",
-      male_security: "عنصر أمن رجال", female_security: "عنصر أمن نساء"
+      flight_date: "تاريخ الرحلة", aircraft_type: "نوع الطائرة", flight_direction: "قدوم/مغادرة",
+      destination: "وجهة الرحلة", start_time: "توقيت بدء الرحلة", end_time: "توقيت انتهاء الرحلة", 
+      gate_number: "رقم البوابة", pax_count: "عدد الركاب", airport_officer: "اسم ضابط المطار", 
+      supervisor: "اسم المشرف", ground_hostess: "المضيفة الأرضية", baggage_inspector: "مفتش الحقائب", 
+      xr_inspector: "مفتش جهاز الـ XR", male_body_inspector: "مفتش جسدي رجال", 
+      female_body_inspector: "مفتش جسدي نساء", male_security: "عنصر أمن رجال", female_security: "عنصر أمن نساء"
     };
 
     function validateForm() {
@@ -478,7 +537,7 @@
         const el = document.getElementById(id);
         if(!el.value.trim()) {
           alert(`الرجاء تعبئة جميع الحقول. الحقل المفقود: ${LABELS[id]}`);
-          el.focus();
+          if (el.type !== 'hidden') el.focus();
           return false;
         }
       }
@@ -502,7 +561,7 @@
             <div style="display:flex; align-items:center; gap:16px;">
               <div>
                 <div style="font-weight:900; font-size:14px; opacity:.92; margin-bottom:4px;">الجمهورية العربية السورية</div>
-                <h1>تقرير ساحة الطيران - خدمة الطائرة</h1>
+                <h1>ترانزيت_تقرير خدمة الطائرات</h1>
               </div>
             </div>
           </div>
@@ -516,15 +575,16 @@
                   <td class="k">نوع الطائرة</td><td class="v"><span class="pdfAutoFix">${escapeHtml(d.aircraft_type)}</span></td>
                 </tr>
                 <tr>
+                  <td class="k">قدوم/مغادرة</td><td class="v"><span class="pdfAutoFix">${escapeHtml(d.flight_direction)}</span></td>
                   <td class="k">وجهة الرحلة</td><td class="v"><span class="pdfAutoFix">${escapeHtml(d.destination)}</span></td>
-                  <td class="k">رقم البوابة</td><td class="v"><span class="pdfAutoFix">${escapeHtml(d.gate_number)}</span></td>
                 </tr>
                 <tr>
                   <td class="k">توقيت البدء</td><td class="v" style="direction:ltr; text-align:right;"><span class="pdfAutoFix">${escapeHtml(d.start_time)}</span></td>
                   <td class="k">توقيت الانتهاء</td><td class="v" style="direction:ltr; text-align:right;"><span class="pdfAutoFix">${escapeHtml(d.end_time)}</span></td>
                 </tr>
                 <tr>
-                  <td class="k">عدد الركاب</td><td class="v" colspan="3"><span class="pdfAutoFix">${escapeHtml(d.pax_count)}</span></td>
+                  <td class="k">رقم البوابة</td><td class="v"><span class="pdfAutoFix">${escapeHtml(d.gate_number)}</span></td>
+                  <td class="k">عدد الركاب</td><td class="v"><span class="pdfAutoFix">${escapeHtml(d.pax_count)}</span></td>
                 </tr>
               </table>
             </div>
@@ -592,7 +652,7 @@
         if (navigator.canShare && navigator.canShare({ files: [fileForShare] })) {
           try {
             await navigator.share({
-              title: 'تقرير ساحة الطيران',
+              title: 'ترانزيت_تقرير خدمة الطائرات',
               text: 'مرفق تقرير ساحة الطيران بصيغة PDF.',
               files: [fileForShare]
             });
@@ -619,11 +679,13 @@
         if(!el.readOnly && el.id !== 'aircraft_search') el.value = '';
       });
       setAircraftType('');
+      setDirectionType('');
       updateDay();
     }
 
     window.onload = function(){
       initAircraftSelect();
+      initDirectionSelect();
     };
   </script>
 </body>

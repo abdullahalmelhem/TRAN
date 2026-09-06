@@ -243,7 +243,7 @@
           </div>
         </div>
         <div class="flex flex-wrap gap-2">
-          <button id="exportPdfBtn" class="btn btn-gold" onclick="exportPdfPro()">تصدير PDF</button>
+          <button id="exportPdfBtn" class="btn btn-gold" onclick="exportPdfPro()">تصدير ومشاركة PDF</button>
           <button class="btn btn-dark" onclick="resetForm()">إفراغ الحقول</button>
         </div>
       </div>
@@ -547,8 +547,28 @@
 
         const worker = html2pdf().set(opt).from(pdfPage).toPdf();
         const rawBlob = await worker.outputPdf('blob');
+        
         const pdfBlob = new Blob([rawBlob], { type: 'application/pdf' });
-        saveAs(pdfBlob, fileName);
+        const fileForShare = new File([pdfBlob], fileName, {
+          type: 'application/pdf',
+          lastModified: Date.now()
+        });
+
+        if (navigator.canShare && navigator.canShare({ files: [fileForShare] })) {
+          try {
+            await navigator.share({
+              title: 'تقرير ساحة الطيران',
+              text: 'مرفق تقرير ساحة الطيران بصيغة PDF.',
+              files: [fileForShare]
+            });
+          } catch (error) {
+            if (error.name !== 'AbortError') {
+              saveAs(pdfBlob, fileName);
+            }
+          }
+        } else {
+          saveAs(pdfBlob, fileName);
+        }
 
       }catch(e){
         alert("حدث خطأ أثناء تصدير PDF: " + (e?.message || e));

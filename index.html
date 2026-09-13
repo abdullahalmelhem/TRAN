@@ -352,9 +352,13 @@
                 <input id="end_time" class="inp required-field" type="time">
               </div>
 
-              <div class="sm:col-span-2">
+              <div>
                 <label class="label">عدد الركاب</label>
                 <input id="pax_count" class="inp required-field" type="number" min="0" placeholder="0">
+              </div>
+              <div>
+                <label class="label">عدد حالات إلغاء السفر</label>
+                <input id="cancellations_count" class="inp required-field" type="number" min="0" placeholder="0">
               </div>
             </div>
           </div>
@@ -524,7 +528,7 @@
       flight_number: "رقم الرحلة",
       flight_date: "تاريخ الرحلة", aircraft_type: "نوع الطائرة", flight_direction: "قدوم/مغادرة",
       destination: "وجهة الرحلة", start_time: "توقيت بدء الرحلة", end_time: "توقيت انتهاء الرحلة", 
-      gate_number: "رقم البوابة", pax_count: "عدد الركاب", airport_officer: "اسم ضابط المطار", 
+      gate_number: "رقم البوابة", pax_count: "عدد الركاب", cancellations_count: "عدد حالات إلغاء السفر", airport_officer: "اسم ضابط المطار", 
       supervisor: "اسم المشرف", ground_hostess: "المضيفة الأرضية", baggage_inspector: "مفتش الحقائب", 
       xr_inspector: "مفتش جهاز الـ XR", male_body_inspector: "مفتش جسدي رجال", 
       female_body_inspector: "مفتش جسدي نساء", male_security: "عنصر أمن رجال", female_security: "عنصر أمن نساء",
@@ -587,7 +591,8 @@
                   <td class="k">توقيت الانتهاء</td><td class="v" style="direction:ltr; text-align:right;"><span class="pdfAutoFix">${escapeHtml(d.end_time)}</span></td>
                 </tr>
                 <tr>
-                  <td class="k">عدد الركاب</td><td class="v" colspan="3"><span class="pdfAutoFix">${escapeHtml(d.pax_count)}</span></td>
+                  <td class="k">عدد الركاب</td><td class="v"><span class="pdfAutoFix">${escapeHtml(d.pax_count)}</span></td>
+                  <td class="k">عدد حالات إلغاء السفر</td><td class="v"><span class="pdfAutoFix">${escapeHtml(d.cancellations_count)}</span></td>
                 </tr>
               </table>
             </div>

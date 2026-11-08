@@ -334,13 +334,13 @@
               </div>
               
               <div>
-                <label class="label">وجهة الرحلة</label>
+                <label class="label">وجهة الرحلة (دولة القدوم أو المغادرة)</label>
                 <input id="destination" class="inp required-field" type="text" placeholder="الوجهة">
               </div>
 
               <div>
-                <label class="label">رقم البوابة</label>
-                <input id="gate_number" class="inp required-field" type="text" placeholder="رقم البوابة">
+                <label class="label">اسم المهبط (ساحات)</label>
+                <input id="apron_name" class="inp required-field" type="text" placeholder="اسم المهبط">
               </div>
 
               <div>
@@ -359,6 +359,11 @@
               <div>
                 <label class="label">عدد حالات إلغاء السفر</label>
                 <input id="cancellations_count" class="inp required-field" type="number" min="0" placeholder="0">
+              </div>
+
+              <div class="col-span-1 sm:col-span-2">
+                <label class="label">المفقودات</label>
+                <input id="lost_and_found" class="inp required-field" type="text" placeholder="اذكر المواد أو اكتب كلمة لا يوجد">
               </div>
             </div>
           </div>
@@ -381,6 +386,11 @@
               <div><label class="label">عنصر أمن رجال</label><input id="male_security" class="inp required-field" type="text"></div>
               <div><label class="label">عنصر أمن نساء</label><input id="female_security" class="inp required-field" type="text"></div>
               <div><label class="label">موظف مسحة ETD</label><input id="etd_swab_employee" class="inp required-field" type="text"></div>
+              
+              <div class="col-span-1 sm:col-span-2 mt-2">
+                <label class="label">أسماء العناصر المتواجدة على الرحلة</label>
+                <textarea id="crew_names" class="ta required-field" placeholder="اذكر الأسماء..."></textarea>
+              </div>
             </div>
           </div>
 
@@ -423,11 +433,11 @@
       }
     }
 
-    // تمت إضافة "التركية أجيت أنقرة" هنا
+    // تمت إضافة "سلام" إلى القائمة
     const AIRCRAFT_OPTIONS = [
       "السورية", "فلاي شام", "الأردنية", "الجزيرة", "العربية",
       "القطرية", "التركية", "التركية أجيت صبيحة", "التركية أجيت أنقرة", "فلاي دبي",
-      "فلاي ناس", "فلاي أديل", "بوخاريست", "إغاثي", "حربي", "خاصة", "الاتحاد", "الكويتية", "Lave", "Sundair"
+      "فلاي ناس", "فلاي أديل", "بوخاريست", "إغاثي", "حربي", "خاصة", "الاتحاد", "الكويتية", "Lave", "Sundair", "سلام"
     ];
 
     function setAircraftType(val){
@@ -527,12 +537,12 @@
     const LABELS = {
       flight_number: "رقم الرحلة",
       flight_date: "تاريخ الرحلة", aircraft_type: "نوع الطائرة", flight_direction: "قدوم/مغادرة",
-      destination: "وجهة الرحلة", start_time: "توقيت بدء الرحلة", end_time: "توقيت انتهاء الرحلة", 
-      gate_number: "رقم البوابة", pax_count: "عدد الركاب", cancellations_count: "عدد حالات إلغاء السفر", airport_officer: "اسم ضابط المطار", 
+      destination: "وجهة الرحلة", apron_name: "اسم المهبط (ساحات)", start_time: "توقيت بدء الرحلة", end_time: "توقيت انتهاء الرحلة", 
+      pax_count: "عدد الركاب", cancellations_count: "عدد حالات إلغاء السفر", lost_and_found: "المفقودات", airport_officer: "اسم ضابط المطار", 
       supervisor: "اسم المشرف", ground_hostess: "المضيفة الأرضية", baggage_inspector: "مفتش الحقائب", 
       xr_inspector: "مفتش جهاز الـ XR", male_body_inspector: "مفتش جسدي رجال", 
       female_body_inspector: "مفتش جسدي نساء", male_security: "عنصر أمن رجال", female_security: "عنصر أمن نساء",
-      etd_swab_employee: "موظف مسحة ETD"
+      etd_swab_employee: "موظف مسحة ETD", crew_names: "أسماء العناصر المتواجدة على الرحلة"
     };
 
     function validateForm() {
@@ -584,7 +594,7 @@
                 </tr>
                 <tr>
                   <td class="k">وجهة الرحلة</td><td class="v"><span class="pdfAutoFix">${escapeHtml(d.destination)}</span></td>
-                  <td class="k">رقم البوابة</td><td class="v"><span class="pdfAutoFix">${escapeHtml(d.gate_number)}</span></td>
+                  <td class="k">اسم المهبط (ساحات)</td><td class="v"><span class="pdfAutoFix">${escapeHtml(d.apron_name)}</span></td>
                 </tr>
                 <tr>
                   <td class="k">توقيت البدء</td><td class="v" style="direction:ltr; text-align:right;"><span class="pdfAutoFix">${escapeHtml(d.start_time)}</span></td>
@@ -593,6 +603,9 @@
                 <tr>
                   <td class="k">عدد الركاب</td><td class="v"><span class="pdfAutoFix">${escapeHtml(d.pax_count)}</span></td>
                   <td class="k">عدد حالات إلغاء السفر</td><td class="v"><span class="pdfAutoFix">${escapeHtml(d.cancellations_count)}</span></td>
+                </tr>
+                <tr>
+                  <td class="k">المفقودات</td><td class="v" colspan="3"><span class="pdfAutoFix">${escapeHtml(d.lost_and_found)}</span></td>
                 </tr>
               </table>
             </div>
@@ -605,6 +618,7 @@
                 <tr><td class="k">مفتش جهاز الـ XR</td><td class="v">${escapeHtml(d.xr_inspector)}</td><td class="k">مفتش جسدي رجال</td><td class="v">${escapeHtml(d.male_body_inspector)}</td></tr>
                 <tr><td class="k">مفتش جسدي نساء</td><td class="v">${escapeHtml(d.female_body_inspector)}</td><td class="k">عنصر أمن رجال</td><td class="v">${escapeHtml(d.male_security)}</td></tr>
                 <tr><td class="k">عنصر أمن نساء</td><td class="v">${escapeHtml(d.female_security)}</td><td class="k">موظف مسحة ETD</td><td class="v">${escapeHtml(d.etd_swab_employee)}</td></tr>
+                <tr><td class="k" style="vertical-align:top;">أسماء العناصر</td><td class="v" colspan="3"><span class="pdfAutoFix">${escapeHtml(d.crew_names)}</span></td></tr>
               </table>
             </div>
 

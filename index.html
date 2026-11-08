@@ -339,14 +339,10 @@
               </div>
 
               <div>
-                <label class="label">اسم المهبط (ساحات)</label>
-                <input id="apron_name" class="inp required-field" type="text" placeholder="اسم المهبط">
-              </div>
-
-              <div>
                 <label class="label">توقيت بدء الرحلة</label>
                 <input id="start_time" class="inp required-field" type="time">
               </div>
+              
               <div>
                 <label class="label">توقيت انتهاء الرحلة</label>
                 <input id="end_time" class="inp required-field" type="time">
@@ -356,6 +352,7 @@
                 <label class="label">عدد الركاب</label>
                 <input id="pax_count" class="inp required-field" type="number" min="0" placeholder="0">
               </div>
+              
               <div>
                 <label class="label">عدد حالات إلغاء السفر</label>
                 <input id="cancellations_count" class="inp required-field" type="number" min="0" placeholder="0">
@@ -433,7 +430,6 @@
       }
     }
 
-    // تمت إضافة "سلام" إلى القائمة
     const AIRCRAFT_OPTIONS = [
       "السورية", "فلاي شام", "الأردنية", "الجزيرة", "العربية",
       "القطرية", "التركية", "التركية أجيت صبيحة", "التركية أجيت أنقرة", "فلاي دبي",
@@ -537,7 +533,7 @@
     const LABELS = {
       flight_number: "رقم الرحلة",
       flight_date: "تاريخ الرحلة", aircraft_type: "نوع الطائرة", flight_direction: "قدوم/مغادرة",
-      destination: "وجهة الرحلة", apron_name: "اسم المهبط (ساحات)", start_time: "توقيت بدء الرحلة", end_time: "توقيت انتهاء الرحلة", 
+      destination: "وجهة الرحلة", start_time: "توقيت بدء الرحلة", end_time: "توقيت انتهاء الرحلة", 
       pax_count: "عدد الركاب", cancellations_count: "عدد حالات إلغاء السفر", lost_and_found: "المفقودات", airport_officer: "اسم ضابط المطار", 
       supervisor: "اسم المشرف", ground_hostess: "المضيفة الأرضية", baggage_inspector: "مفتش الحقائب", 
       xr_inspector: "مفتش جهاز الـ XR", male_body_inspector: "مفتش جسدي رجال", 
@@ -593,8 +589,7 @@
                   <td class="k">قدوم/مغادرة</td><td class="v"><span class="pdfAutoFix">${escapeHtml(d.flight_direction)}</span></td>
                 </tr>
                 <tr>
-                  <td class="k">وجهة الرحلة</td><td class="v"><span class="pdfAutoFix">${escapeHtml(d.destination)}</span></td>
-                  <td class="k">اسم المهبط (ساحات)</td><td class="v"><span class="pdfAutoFix">${escapeHtml(d.apron_name)}</span></td>
+                  <td class="k">وجهة الرحلة</td><td class="v" colspan="3"><span class="pdfAutoFix">${escapeHtml(d.destination)}</span></td>
                 </tr>
                 <tr>
                   <td class="k">توقيت البدء</td><td class="v" style="direction:ltr; text-align:right;"><span class="pdfAutoFix">${escapeHtml(d.start_time)}</span></td>
